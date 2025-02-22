@@ -6,7 +6,7 @@ class AppWidget {
         color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: 25,
-        fontFamily: "Poppins");
+        fontFamily: "Sen");
   }
 
   static TextStyle HeadlineTextFeildStyle() {
@@ -14,7 +14,7 @@ class AppWidget {
         color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: 25,
-        fontFamily: "Dongrek");
+        fontFamily: "Sen");
   }
 
   static TextStyle LightTextFeildStyle() {
@@ -22,6 +22,6 @@ class AppWidget {
         color: Colors.black38,
         fontWeight: FontWeight.w500,
         fontSize: 15.0,
-        fontFamily: "Dongrek");
+        fontFamily: "Sen");
   }
 }

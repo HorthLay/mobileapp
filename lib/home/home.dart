@@ -1,15 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:vireakrothmobile/details/category_detail.dart';
-import 'package:vireakrothmobile/home/contact.dart';
-import 'package:vireakrothmobile/home/search.dart';
-import 'package:vireakrothmobile/home/slider.dart';
-import 'package:vireakrothmobile/model/category.dart';
-import 'package:vireakrothmobile/widget/widget_category.dart';
-import 'package:vireakrothmobile/widget/widget_support.dart';
+import 'package:icons_plus/icons_plus.dart';
 
+import 'package:vireakrothmobile/home/homecontent.dart';
+
+import 'package:vireakrothmobile/model/category.dart';
+import 'package:vireakrothmobile/navigation/natificationscreen.dart';
+import 'package:vireakrothmobile/navigation/shopscreen.dart';
+import 'package:vireakrothmobile/navigation/userscreen.dart';
+
+import 'package:get/get.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -20,6 +21,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Category> listCategory = [];
   @override
+  int _selectedIndex = 0; // Default Home Screen
+  // start Buttombar
+  final List<Widget> _pages = [
+    Homecontent(), // Separate home content to prevent nesting issues
+    Shopscreen(),
+    NotificationScreen(),
+    Userscreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  // EndButtombar
+
+
+
+
   void initState() {
     super.initState();
     listCategory.add(
@@ -31,32 +51,35 @@ class _HomeScreenState extends State<HomeScreen> {
     listCategory
         .add(new Category(id: 4, title: "jbl", image: "assets/images/jbl.png"));
   }
-
+  int _notificationCount = 2;
   int _currentIndex = 0;
 
-  final _items = [
-    SalomonBottomBarItem(
-        icon: Image.asset(
-          'assets/icons/home.png',
-          width: 40,
-          height: 24,
-        ),
-        title: const Text("Home")),
-    SalomonBottomBarItem(
-      icon: Image.asset('assets/icons/box.png', width: 40, height: 24),
-      title: const Text("Product"),
-    ),
-    SalomonBottomBarItem(
-        icon: const Icon(Icons.shopping_cart), title: const Text("Order")),
-    SalomonBottomBarItem(
-        icon: Image.asset(
-          'assets/icons/use.png',
-          width: 40,
-          height: 24,
-        ),
-        title: const Text("Users")),
+  final List<Map<String, dynamic>> products = [
+    {
+      "name": "Iphone 16 Pro Max",
+      "image": "assets/images/iphone16.png",
+      "price": 19.99,
+      "isNew": false,
+    },
+    {
+      "name": "Product 2",
+      "image": "assets/images/iphone16.png",
+      "price": 29.99,
+      "isNew": false,
+    },
+    {
+      "name": "Product 3",
+      "image": "assets/images/iphone16.png",
+      "price": 15.99,
+      "isNew": true,
+    },
+    {
+      "name": "Product 4",
+      "image": "assets/images/iphone16.png",
+      "price": 45.99,
+      "isNew": false,
+    },
   ];
-
   final List<Map<String, dynamic>> gridItems = [
     {"image": "assets/icons/tik.png", "title": "Tiktok", "color": Colors.pink},
     {
@@ -71,237 +94,58 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.only(top: 53.0, left: 10.0, right: 10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 👤 Greeting & Cart Icon
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Hello User!", style: AppWidget.boldTextFeildStyle()),
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          'assets/images/cambodia.png', // Replace with your image path
-                          width: 35,
-                          height: 35,
-                          fit: BoxFit.cover,
+      body: _pages[_selectedIndex], // Displays selected page
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Iconsax.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Iconsax.shopping_cart), label: "Shop"),
+          BottomNavigationBarItem(
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(Iconsax.notification),
+                if (_notificationCount > 0) // Show badge if count > 0
+                  Positioned(
+                    right: -5,
+                    top: -5,
+                    child: Container(
+                      padding: EdgeInsets.all(0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '$_notificationCount',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(
-                          width:
-                              8), // Adds space between the image and the icon
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Icon(
-                            Icons.shopping_cart,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // 🔍 Search Bar
-              Search(),
-              const SizedBox(height: 20),
-
-              // 📢 Welcome Text
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/icons/smartphone.png',
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Phone",
-                    style: AppWidget.HeadlineTextFeildStyle(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text("Welcome to VireakRoth App",
-                  style: AppWidget.LightTextFeildStyle()),
-              const SizedBox(height: 10),
-
-              // 📸 Slider
-              MySlider(),
-              const SizedBox(height: 10),
-
-              // 📂 Category Title
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/icons/cate.png',
-                    height: 25,
-                    width: 25,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("Category", style: AppWidget.HeadlineTextFeildStyle())
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // 🏷️ Categories List
-              SizedBox(
-                height: 100, // Ensure it fits
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: listCategory.length,
-                  itemBuilder: (BuildContext context, index) {
-                    var data = listCategory[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CategoryDetailScreen(
-                                          title: data.title,
-                                          category: data,
-                                        ),
-                                ),
-                            );
-                          },
-                          child: Container(
-                            width: 135,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.grey.shade200,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: data.image != null
-                                  ? Image.asset(
-                                      data.image!,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        "No Image",
-                                        style: TextStyle(
-                                            color: Colors.grey.shade700),
-                                      ),
-                                    ),
-                            ),
-                          )),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 5),
-              // 🧱 Grid List with Scroll
-              Container(
-                child: Column(
-
-                  children: [
-                    GridView.builder(
-                      padding: EdgeInsets.all(10),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 11/16,
-                      ),
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  blurRadius: 5,
-                                  offset: Offset(3, 3),
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  "assets/images/iphone16.png"
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "New",style:
-                                          TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                height: 10,
-              ),
-
-              ContactWidget(),
-            ],
+              ],
+            ),
+            label: "Notifications",
           ),
-        ),
-      ),
-      bottomNavigationBar: SalomonBottomBar(
-        items: _items,
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() {
-          _currentIndex = index;
-        }),
+          BottomNavigationBarItem(icon: Icon(Iconsax.user), label: "Profile"),
+        ],
       ),
     );
   }
 }
+
+
+

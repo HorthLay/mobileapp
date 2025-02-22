@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vireakrothmobile/home/productitem.dart';
 import 'package:vireakrothmobile/model/category.dart';
 import 'package:vireakrothmobile/widget/widget_support.dart';
 
 class CategoryDetailScreen extends StatefulWidget {
-   String? title;
-   Category? category;
+  String? title;
+  Category? category;
 
   CategoryDetailScreen({super.key, this.title, this.category});
 
@@ -16,43 +17,59 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title ?? "Category Detail"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(10.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Center(
-            child: ClipRRect(
-               borderRadius: BorderRadius.circular(10),
-               child: widget.category?.image != null && widget.category!.image!.isNotEmpty
-                   ? Image.asset(
+            SizedBox(height: 20),
 
-                 widget.category!.image!,
+            // Back button, title, and shopping cart in a Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items with space between
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context), // Go back to previous screen
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[200],
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                    child: Icon(Icons.arrow_back_ios, color: Colors.white),
+                  ),
+                ),
 
-                 width: 200,
-                 height: 200,
+                // Title in the middle, takes up remaining space
+                Expanded(
+                  child: Text(
+                    widget.title ?? 'Category Details', // Default title if none provided
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,fontFamily: "Sen"),
+                    textAlign: TextAlign.center, // Center the title
+                  ),
+                ),
 
-                 errorBuilder: (context, error, stackTrace) => Center(
-                   child: Text(
-                     "Image Error",
-                     style: TextStyle(color: Colors.red),
-                   ),
-                 ),
-               )
-                   : Center(
-                 child: Text(
-                   "No Image Available",
-                   style: TextStyle(color: Colors.grey),
-                 ),
-               ),
-             ),
-           ),
+                GestureDetector(
+                  onTap: () => print("Shopping Cart Clicked"),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    child: Icon(Icons.search, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 10),
+
+            ProductItem(),
+            ProductItem(),
+            ProductItem(),
+
+
           ],
         ),
       ),

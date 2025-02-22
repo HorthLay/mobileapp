@@ -43,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 80), // Pushes text below back button
+                  SizedBox(height: 50), // Pushes text below back button
                   Text(
                     "Sign Up",
                     style: TextStyle(
@@ -62,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontFamily: "Poppins"),
                   ),
 
-                  SizedBox(height: 40),
+                  SizedBox(height: 20),
 
                   Expanded(child: Container(
                     decoration: BoxDecoration(

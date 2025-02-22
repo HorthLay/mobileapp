@@ -36,9 +36,9 @@ class ContactWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8,),
                 Text(
-                  "ទំនាក់ទំនង",
+                  "Contact",
                   style: TextStyle(
-                    fontFamily: "Dongrek",
+                    fontFamily: "Sen",
                     fontSize: 20,fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

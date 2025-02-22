@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:vireakrothmobile/auth/forgot_password.dart';
+import 'package:vireakrothmobile/auth/password.dart';
 import 'package:vireakrothmobile/auth/register.dart';
-import 'package:vireakrothmobile/home/home.dart';
+import '../controllers/auth_controller.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  final AuthController authController = Get.put(AuthController());
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-class _LoginScreenState extends State<LoginScreen> {
-  bool isChecked = false;
-  final _formSignInKey = GlobalKey<FormState>();
-  bool rememberPassword = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // Logo
               SizedBox(height: 40),
               Container(
                 width: 70,
@@ -35,8 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       image: AssetImage("assets/logo.jpg"), fit: BoxFit.cover),
                 ),
               ),
-
-              // Title
               SizedBox(height: 10),
               Text(
                 "Log In",
@@ -44,27 +38,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 25,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontFamily: "Poppins"),
+                    fontFamily: "Sen"),
               ),
-
-              // Subtitle
               SizedBox(height: 10),
               Text(
                 "Please sign in to your existing account",
                 style: TextStyle(
                     fontSize: 12,
                     color: Colors.white70,
-                    fontFamily: "Poppins"),
+                    fontFamily: "Sen"),
               ),
-
               SizedBox(height: 40),
-
-              // Login Form Box
-
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white, // Background color
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40.0),
                       topRight: Radius.circular(40.0),
@@ -76,166 +64,107 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Email Field
-                          Text(
-                            "Email",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
+                          Text("Email", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: "Sen")),
                           SizedBox(height: 8),
                           TextField(
+                            controller: emailController,
+                            style: TextStyle(
+                              fontFamily: 'Sen', // Apply font
+                              fontSize: 16,
+                            ),
                             decoration: InputDecoration(
                               hintText: "Enter your email",
+                              hintStyle: TextStyle(
+                                fontFamily: 'Poppins', // Apply font to hint
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
                               filled: true,
                               fillColor: Colors.grey[200],
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  borderSide: BorderSide.none),
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
-
                           SizedBox(height: 20),
-
-                          // Password Field
-                          Text(
-                            "Password",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
+                          Text("Password", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, fontFamily: "Sen")),
                           SizedBox(height: 8),
-                          TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: "Enter your password",
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  borderSide: BorderSide.none),
-                            ),
-                          ),
-
+                          PasswordField(passwordController: passwordController),
                           SizedBox(height: 10),
-
-                          // Forgot Password
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  Checkbox(
-                                    value: isChecked,
+                                  Obx(() => Checkbox(
+                                    value: authController.rememberMe.value,
                                     onChanged: (bool? value) {
-                                      setState(() {
-                                        isChecked = value!;
-                                      });
+                                      authController.rememberMe.value = value!;
                                     },
-                                  ),
-                                  const Text(
-                                    "Remember Me",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
+                                  )),
+                                  Text("Remember Me", style: TextStyle(color: Colors.black)),
                                 ],
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => ForgotPasswordScreen(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        const begin = Offset(1.0, 0.0); // Slide from right to left
-                                        const end = Offset.zero;
-                                        const curve = Curves.easeInOut;
-
-                                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                        var offsetAnimation = animation.drive(tween);
-
-                                        return SlideTransition(
-                                          position: offsetAnimation,
-                                          child: child,
-                                        );
-                                      },
-                                    ),
+                                  Get.to(() => ForgotPasswordScreen(),
+                                    transition: Transition.rightToLeftWithFade, // Slide from right to left
+                                    duration: Duration(milliseconds: 500), // Smooth animation
                                   );
                                 },
-                                child: const Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(color: Colors.blueAccent),
-                                ),
+                                child: Text("Forgot Password?", style: TextStyle(color: Colors.blueAccent)),
                               ),
                             ],
                           ),
-
                           SizedBox(height: 10),
-
-                          // Login Button
                           SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {},
+                            child: Obx(() => ElevatedButton(
+                              onPressed: authController.isLoading.value
+                                  ? null
+                                  : () {
+                                print("Attempting to login..."); // Debugging log
+                                authController.login(
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blueAccent,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.0)),
                                 padding: EdgeInsets.symmetric(vertical: 12),
                               ),
-                              child: Text(
-                                "Log In",
-                                style: TextStyle(color: Colors.white, fontSize: 16),
-                              ),
-                            ),
+                              child: authController.isLoading.value
+                                  ? CircularProgressIndicator(color: Colors.white)
+                                  : Text("Log In", style: TextStyle(color: Colors.white, fontSize: 16)),
+                            )),
                           ),
-
                           SizedBox(height: 20),
-
-                          // Signup Redirect
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Don't have an account? "),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => RegisterScreen(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        const begin = Offset(1.0, 0.0); // Slide from right to left
-                                        const end = Offset.zero;
-                                        const curve = Curves.easeInOut;
-
-                                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                        var offsetAnimation = animation.drive(tween);
-
-                                        return SlideTransition(
-                                          position: offsetAnimation,
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  );
+                                  Get.to(() => RegisterScreen(), transition: Transition.rightToLeft, duration: Duration(milliseconds: 500));
                                 },
                                 child: Text(
                                   "Sign Up",
-                                  style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                           SizedBox(height: 30),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Or",style: TextStyle(
-                                fontSize: 18,color: Colors.grey.shade500,
-                              ),),
+                              Text("Or", style: TextStyle(fontSize: 18, color: Colors.grey.shade500)),
                             ],
                           ),
-
                           SizedBox(height: 30),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -251,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
