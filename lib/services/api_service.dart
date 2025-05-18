@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:vireakrothmobile/model/product_model.dart';
 
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2:8000/api"; // 🔴 Localhost for Android Emulator
+    static const String baseUrl = "https://wtd.qpz.temporary.site/api"; // 🔴 Localhost for Android Emulator
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
@@ -45,6 +46,22 @@ class ApiService {
       return jsonDecode(response.body); // Return the response body if token is valid
     } else {
       throw Exception("Token is invalid or expired");
+    }
+  }
+
+  static Future<List<Product>> getProducts() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/products'),
+      headers: {
+        "Accept": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((item) => Product.fromJson(item)).toList();
+    } else {
+      throw Exception("Failed to load products");
     }
   }
 }

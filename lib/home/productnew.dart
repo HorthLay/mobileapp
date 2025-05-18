@@ -1,37 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vireakrothmobile/details/productdetail.dart';
 import 'package:vireakrothmobile/controllers/product_controller.dart';
+import 'package:vireakrothmobile/details/productdetail.dart';
 
-class ProductItem extends StatefulWidget {
-  const ProductItem({super.key});
+class ProductNew extends StatefulWidget {
+  const ProductNew({super.key});
 
   @override
-  State<ProductItem> createState() => _ProductItemState();
+  State<ProductNew> createState() => _ProductNewState();
 }
 
-class _ProductItemState extends State<ProductItem> {
-  late final ProductController controller;
-
-  // Fix image URL to replace localhost IP for emulator
-  String fixImageUrl(String url) {
-    if (url.isEmpty) return url;
-
-    // Parse the URL
-    Uri uri = Uri.parse(url);
-
-    // Replace host with 127.0.0.1
-    Uri fixedUri = uri.replace(host: 'wtd.qpz.temporary.site');
-
-    return fixedUri.toString();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.put(ProductController(), permanent: true);
-    controller.fetchProducts();
-  }
+class _ProductNewState extends State<ProductNew> {
+  final ProductController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +20,11 @@ class _ProductItemState extends State<ProductItem> {
         return const Center(child: CircularProgressIndicator());
       }
 
+      // Filter products with status == 'new'
+      final newProducts = controller.productList
+          .where((product) => product.status == 'new')
+          .toList();
+
       return GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -47,12 +32,11 @@ class _ProductItemState extends State<ProductItem> {
           crossAxisCount: 2,
           childAspectRatio: 0.60,
           crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+          mainAxisSpacing: 2,
         ),
-        itemCount: controller.productList.length,
+        itemCount: newProducts.length,
         itemBuilder: (context, index) {
-          final product = controller.productList[index];
-          final imageUrl = fixImageUrl(product.image ?? '');
+          final product = newProducts[index];
 
           return GestureDetector(
             onTap: () {
@@ -60,21 +44,17 @@ class _ProductItemState extends State<ProductItem> {
                 context,
                 PageRouteBuilder(
                   transitionDuration: const Duration(milliseconds: 500),
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      ProductDetail(product: {
-                        'title': product.name,
-                        'image': imageUrl,
-                        'price': product.price.toStringAsFixed(2),
-                        'status': product.status,
-                        'discount': "${product.discount.toStringAsFixed(2)}%",
-                      }),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    final tween = Tween(
-                        begin: const Offset(1.0, 0.0), end: Offset.zero)
+                  pageBuilder: (_, __, ___) => ProductDetail(product: {
+                    'title': product.name,
+                    'image': product.image,
+                    'price': product.price.toStringAsFixed(2),
+                    'status': product.status,
+                    'discount': "${product.discount.toStringAsFixed(2)}%",
+                  }),
+                  transitionsBuilder: (_, animation, __, child) {
+                    final tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
                         .chain(CurveTween(curve: Curves.easeInOut));
-                    return SlideTransition(
-                        position: animation.drive(tween), child: child);
+                    return SlideTransition(position: animation.drive(tween), child: child);
                   },
                 ),
               );
@@ -97,13 +77,12 @@ class _ProductItemState extends State<ProductItem> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (product.discount > 0)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (product.discount > 0)
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.blueAccent,
                             borderRadius: BorderRadius.circular(12),
@@ -117,13 +96,13 @@ class _ProductItemState extends State<ProductItem> {
                             ),
                           ),
                         ),
-                        const Icon(Icons.favorite_border, color: Colors.red),
-                      ],
-                    ),
+                      const Icon(Icons.favorite_border, color: Colors.red),
+                    ],
+                  ),
                   const SizedBox(height: 8),
                   Center(
                     child: Image.network(
-                      imageUrl,
+                      product.image ?? '',
                       height: 120,
                       width: 120,
                       fit: BoxFit.contain,
@@ -166,8 +145,7 @@ class _ProductItemState extends State<ProductItem> {
                           color: Colors.blueAccent,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child:
-                        const Icon(Icons.add, size: 16, color: Colors.white),
+                        child: const Icon(Icons.add, size: 16, color: Colors.white),
                       ),
                     ],
                   ),

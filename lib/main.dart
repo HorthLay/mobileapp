@@ -5,9 +5,11 @@ import 'package:vireakrothmobile/auth/forgot_password.dart';
 import 'package:vireakrothmobile/auth/login.dart';
 import 'package:vireakrothmobile/auth/register.dart';
 import 'package:vireakrothmobile/controllers/auth_controller.dart';
+import 'package:vireakrothmobile/controllers/product_controller.dart';
 import 'package:vireakrothmobile/home/home.dart';
 
 void main() {
+  Get.lazyPut(() => ProductController());
   Get.put(AuthController());
   runApp(MyApp());
 }

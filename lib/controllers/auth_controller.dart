@@ -6,12 +6,14 @@ import 'package:vireakrothmobile/services/api_service.dart';
 class AuthController extends GetxController {
   var isLoading = false.obs;
   var rememberMe = false.obs;
+  var username = "".obs;
   var token = "".obs; // Store token in memory
 
   @override
   void onInit() {
     super.onInit();
     _loadToken(); // Load the token when the app starts
+    loadUserData(); // Load the username when the app starts
   }
 
   // Load the token from SharedPreferences
@@ -24,6 +26,18 @@ class AuthController extends GetxController {
   Future<void> _saveToken(String tokenValue) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', tokenValue); // Save the token
+  }
+
+  // Save username to SharedPreferences
+  Future<void> _saveUsername(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', name); // Save the username
+  }
+
+  // Load username from SharedPreferences
+  Future<void> loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    username.value = prefs.getString('username') ?? '';
   }
 
   Future<void> login(String email, String password) async {
@@ -39,7 +53,9 @@ class AuthController extends GetxController {
 
       if (response.containsKey("token")) {
         token.value = response["token"]; // Store token in-memory
+        username.value = response["user"]["name"];
         await _saveToken(token.value); // Save token to SharedPreferences
+        await _saveUsername(username.value); // Save username to SharedPreferences
 
         Get.snackbar("Success", "Login Successful",
             backgroundColor: Colors.green, colorText: Colors.white);
@@ -65,8 +81,10 @@ class AuthController extends GetxController {
       if (token.value.isNotEmpty) {
         await ApiService.logout(token.value); // Call the logout API
         token.value = ""; // Clear the token
+        username.value = ""; // Clear the username
         final prefs = await SharedPreferences.getInstance();
         await prefs.remove('auth_token'); // Remove token from SharedPreferences
+        await prefs.remove('username'); // Remove username from SharedPreferences
         Get.offAllNamed("/login"); // Navigate to login screen after logging out
         Get.snackbar("Success", "Logged out successfully",
             backgroundColor: Colors.green, colorText: Colors.white);

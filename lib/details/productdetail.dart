@@ -51,7 +51,7 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             ),
             Center(
-              child: Image.asset(
+              child: Image.network(
                 widget.product["image"],
                 height: 200,
                 width: 250,

@@ -54,32 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _notificationCount = 2;
   int _currentIndex = 0;
 
-  final List<Map<String, dynamic>> products = [
-    {
-      "name": "Iphone 16 Pro Max",
-      "image": "assets/images/iphone16.png",
-      "price": 19.99,
-      "isNew": false,
-    },
-    {
-      "name": "Product 2",
-      "image": "assets/images/iphone16.png",
-      "price": 29.99,
-      "isNew": false,
-    },
-    {
-      "name": "Product 3",
-      "image": "assets/images/iphone16.png",
-      "price": 15.99,
-      "isNew": true,
-    },
-    {
-      "name": "Product 4",
-      "image": "assets/images/iphone16.png",
-      "price": 45.99,
-      "isNew": false,
-    },
-  ];
   final List<Map<String, dynamic>> gridItems = [
     {"image": "assets/icons/tik.png", "title": "Tiktok", "color": Colors.pink},
     {

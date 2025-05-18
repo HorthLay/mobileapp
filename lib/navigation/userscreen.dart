@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vireakrothmobile/controllers/auth_controller.dart';
 
 class Userscreen extends StatelessWidget {
   const Userscreen({super.key});
@@ -38,7 +40,7 @@ class Userscreen extends StatelessWidget {
   Widget _buildProfileSection() {
     return Row(
       children: [
-        // Circle Avatar
+        // Profile Image
         Container(
           width: 80,
           height: 80,
@@ -46,15 +48,13 @@ class Userscreen extends StatelessWidget {
             color: Colors.lightBlue[200],
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: AssetImage("assets/images/iphone16.png"), // Replace with your image path
-              fit: BoxFit.cover, // Ensures the image covers the entire circle
+              image: AssetImage("assets/images/iphone16.png"),
+              fit: BoxFit.cover,
             ),
           ),
         ),
-
-        SizedBox(width: 20), // Spacing between avatar and text
-
-        // Name and Phone Number
+        SizedBox(width: 20),
+        // User Info
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +67,7 @@ class Userscreen extends StatelessWidget {
                 fontFamily: "Sen",
               ),
             ),
-            SizedBox(height: 8), // Spacing between name and phone number
+            SizedBox(height: 8),
             Text(
               "+855966011805",
               style: TextStyle(
@@ -86,18 +86,35 @@ class Userscreen extends StatelessWidget {
     return Column(
       children: [
         _buildSection([
-          _buildListItem(Icons.person_outline, "Personal Info",color: Colors.orange),
-          _buildListItem(Icons.map_outlined, "Addresses",color: Colors.blueAccent),
+          _buildListItem(Icons.person_outline, "Personal Info", color: Colors.orange),
+          _buildListItem(Icons.map_outlined, "Addresses", color: Colors.blueAccent),
         ]),
-        SizedBox(height: 16), // Spacing between sections
+        SizedBox(height: 16),
         _buildSection([
-          _buildListItem(Icons.help_outline, "FAQs",color: Colors.orange),
-          _buildListItem(Icons.shopping_bag_outlined, "Order",color: Colors.blueAccent),
-          _buildListItem(Icons.settings_outlined, "Settings",color: Colors.purple),
+          _buildListItem(Icons.help_outline, "FAQs", color: Colors.orange),
+          _buildListItem(Icons.shopping_bag_outlined, "Order", color: Colors.blueAccent),
+          _buildListItem(Icons.settings_outlined, "Settings", color: Colors.purple),
         ]),
         SizedBox(height: 100),
         _buildSection([
-          _buildListItem(Icons.logout, "Log Out", color: Colors.red),
+          _buildListItem(
+            Icons.logout,
+            "Log Out",
+            color: Colors.red,
+            onTap: () {
+              Get.defaultDialog(
+                title: "Confirm Logout",
+                middleText: "Are you sure you want to log out?",
+                textCancel: "Cancel",
+                textConfirm: "Log Out",
+                confirmTextColor: Colors.white,
+                onConfirm: () {
+                  Get.back(); // Close the dialog
+                  Get.find<AuthController>().logout(); // Call logout method
+                },
+              );
+            },
+          ),
         ]),
       ],
     );
@@ -113,14 +130,19 @@ class Userscreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(IconData icon, String title, {Color color = Colors.black}) {
+  Widget _buildListItem(IconData icon, String title, {Color color = Colors.black, VoidCallback? onTap}) {
     return ListTile(
       leading: Icon(icon, color: color, size: 24),
-      title: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500,fontFamily: "Sen")),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          fontFamily: "Sen",
+        ),
+      ),
       trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-      onTap: () {
-        // Handle tap
-      },
+      onTap: onTap,
     );
   }
 }

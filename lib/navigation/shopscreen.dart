@@ -88,8 +88,7 @@ class Shopscreen extends StatelessWidget {
               ],
             ),
             ProductItem(),
-            ProductItem(),
-            ProductItem(),
+
 
           ],
         ),

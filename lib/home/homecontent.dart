@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:vireakrothmobile/cart/cart.dart';
+import 'package:vireakrothmobile/controllers/auth_controller.dart';
 import 'package:vireakrothmobile/details/category_detail.dart';
 import 'package:vireakrothmobile/home/contact.dart';
 import 'package:vireakrothmobile/home/productitem.dart';
+import 'package:vireakrothmobile/home/productnew.dart';
+import 'package:vireakrothmobile/home/second_handproduct.dart';
 import 'package:vireakrothmobile/home/slider.dart';
 import 'package:vireakrothmobile/widget/widget_support.dart';
 import 'package:vireakrothmobile/model/category.dart';
+import 'package:get/get.dart';
 class Homecontent extends StatefulWidget {
   const Homecontent({super.key});
 
@@ -29,6 +33,9 @@ class _HomecontentState extends State<Homecontent> {
         .add(new Category(id: 4, title: "jbl", image: "assets/images/jbl.png"));
   }
 
+
+  final AuthController auth = Get.find();
+
   int cartItemCount = 3;
 
   @override
@@ -45,7 +52,10 @@ class _HomecontentState extends State<Homecontent> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Hello User!", style: AppWidget.boldTextFeildStyle()),
+                  Obx(() => Text(
+                    "Hello ${auth.username.value}!",
+                    style: AppWidget.boldTextFeildStyle(),
+                  )),
                   Row(
                     children: [
                       ClipRRect(
@@ -226,7 +236,7 @@ class _HomecontentState extends State<Homecontent> {
                 ],
               ),
               // 📦 Product Grid
-              ProductItem(),
+              ProductNew(),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -236,7 +246,7 @@ class _HomecontentState extends State<Homecontent> {
                   ),)
                 ],
               ),
-              ProductItem(),
+              SecondHandproduct(),
               const SizedBox(height: 20),
               ContactWidget(),
             ],

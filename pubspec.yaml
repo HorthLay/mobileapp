@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.0.11
   animate_do: ^3.0.2
   flutter_bakong_khqr: ^0.0.3
+  cached_network_image: ^3.3.1
 
 
   # The following adds the Cupertino Icons font to your application.
