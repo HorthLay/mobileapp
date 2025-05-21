@@ -52,6 +52,7 @@ class _ProductNewState extends State<ProductNew> {
                     'price': product.price.toStringAsFixed(2),
                     'status': product.status,
                     'discount': "${product.discount.toStringAsFixed(2)}%",
+                    'categoryname': product.categoryName,
                   }),
                   transitionsBuilder: (_, animation, __, child) {
                     final tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)

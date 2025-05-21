@@ -114,6 +114,7 @@ class _ProductItemState extends State<ProductItem> {
                                   'price': product.price.toStringAsFixed(2),
                                   'status': product.status,
                                   'discount': "${product.discount.toStringAsFixed(2)}%",
+                                  'categoryname': product.categoryName,
                                 }),
                             transitionsBuilder:
                                 (context, animation, secondaryAnimation, child) {

@@ -10,9 +10,11 @@ class Product {
   final int quantitySold;
   final String status;
   final String createdAt;
+  final String categoryName;
 
   Product({
     required this.id,
+    required this.categoryName,
     required this.name,
     required this.description,
     required this.createdAt,
@@ -34,6 +36,7 @@ class Product {
       discount: double.tryParse(json['discount'].toString()) ?? 0.0,
       stock: json['stock'] ?? 0,
       categoryId: json['category_id'] ?? 0,
+      categoryName: json['categoryname'],
       image: json['image'],
       createdAt: json['created_at'],
       quantitySold: json['quantity_sold'] ?? 0,

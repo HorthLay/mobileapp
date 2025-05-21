@@ -49,6 +49,7 @@ class _SecondHandproductState extends State<SecondHandproduct> {
                     'price': product.price.toStringAsFixed(2),
                     'status': product.status,
                     'discount': "${product.discount.toStringAsFixed(2)}%",
+                    'categoryname': product.categoryName,
                   }),
                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     final tween = Tween(begin: Offset(1.0, 0.0), end: Offset.zero)

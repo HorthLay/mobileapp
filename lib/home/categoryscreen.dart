@@ -62,7 +62,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) =>
-                                  CategoryDetail(categoryId: category.id),
+                                  CategoryDetail(categoryId: category.id,categoryName: category.name,),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(1.0, 0.0);
                                 const end = Offset.zero;

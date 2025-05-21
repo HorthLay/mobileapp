@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:vireakrothmobile/details/productdetail.dart';
 import 'dart:convert';
 import 'package:vireakrothmobile/model/product_model.dart';
 import 'package:animate_do/animate_do.dart';
@@ -69,7 +70,7 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = "Failed to load products. Please try again later.";
         _isLoading = false;
       });
     }
@@ -432,6 +433,22 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
     return GestureDetector(
       onTap: () {
         // Navigate to product detail
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetail(product: {
+              'id': product.id,
+              'title': product.name,
+              'description': product.description,
+              'image': imageUrl,
+              'category_id': product.categoryId,
+              'price': product.price.toStringAsFixed(2),
+              'status': product.status,
+              'discount': product.discount.toStringAsFixed(2),
+              'categoryname': product.categoryName,
+            }),
+          ),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -485,7 +502,7 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            "-${_calculateDiscount(product.price, product.price - product.discount)}%",
+                            "-${product.discount}%",
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -534,21 +551,14 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
                   const SizedBox(height: 4),
 
                   Text(
-                    'Status: ${product.status}',
+                    '${product.status}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       color: Colors.grey[600],
                       fontFamily: "Sen",
                     ),
                   ),
-                  Text(
-                    'Stock: ${product.stock}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontFamily: "Sen",
-                    ),
-                  ),
+
 
                   const SizedBox(height: 6),
                   Row(
@@ -619,6 +629,22 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
       child: InkWell(
         onTap: () {
           // Navigate to product detail
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetail(product: {
+                'id': product.id,
+                'title': product.name,
+                'description': product.description,
+                'image': imageUrl,
+                'category_id': product.categoryId,
+                'price': product.price.toStringAsFixed(2),
+                'status': product.status,
+                'discount': product.discount.toStringAsFixed(2),
+                'categoryname': product.categoryName,
+              }),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(16),
         child: Row(
@@ -972,3 +998,4 @@ class _CategoryDetailState extends State<CategoryDetail> with SingleTickerProvid
     return discount.round();
   }
 }
+
