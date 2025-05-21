@@ -18,7 +18,7 @@ Category category;
           height: 60,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('${category.image}'),
+              image: AssetImage('${category.imageUrl}'),
               fit: BoxFit.cover,
 
               // Adjust based on your design preference

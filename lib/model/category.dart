@@ -1,12 +1,19 @@
-import 'package:flutter/material.dart';
+class Category {
+  final int id;
+  final String name;
+  final String? imageUrl;
 
-class Category{
-int?id;
-String?title;
-String?image;
+  Category({
+    required this.id,
+    required this.name,
+    this.imageUrl,
+  });
 
-
-
-Category({this.id,this.title,this.image});
-
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'],
+      name: json['name'],
+      imageUrl: json['image_url'],
+    );
+  }
 }

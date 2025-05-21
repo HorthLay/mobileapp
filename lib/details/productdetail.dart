@@ -68,9 +68,12 @@ class _ProductDetailState extends State<ProductDetail> {
                   Text(
                     widget.product["title"],
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,fontFamily: "Sen"),
+                  ),Text(
+                    widget.product["category_id"],
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,fontFamily: "Sen"),
                   ),
                   Text(
-                    "RAM 8 Storage 225 Grade A",
+                    widget.product["description"],
                     style: TextStyle(color: Colors.grey, fontSize: 14,fontFamily: "Sen"),
                   ),
                   SizedBox(height: 8),

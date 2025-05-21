@@ -9,11 +9,13 @@ class Product {
   final String? image;
   final int quantitySold;
   final String status;
+  final String createdAt;
 
   Product({
     required this.id,
     required this.name,
     required this.description,
+    required this.createdAt,
     required this.price,
     required this.discount,
     required this.stock,
@@ -33,6 +35,7 @@ class Product {
       stock: json['stock'] ?? 0,
       categoryId: json['category_id'] ?? 0,
       image: json['image'],
+      createdAt: json['created_at'],
       quantitySold: json['quantity_sold'] ?? 0,
       status: json['status'] ?? '',
     );

@@ -44,6 +44,8 @@ class _SecondHandproductState extends State<SecondHandproduct> {
                   pageBuilder: (context, animation, secondaryAnimation) => ProductDetail(product: {
                     'title': product.name,
                     'image': product.image,
+                    'description': product.description,
+                    'category_id': product.categoryId,
                     'price': product.price.toStringAsFixed(2),
                     'status': product.status,
                     'discount': "${product.discount.toStringAsFixed(2)}%",

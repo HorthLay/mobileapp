@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vireakrothmobile/cart/cart.dart';
 import 'package:vireakrothmobile/controllers/auth_controller.dart';
 import 'package:vireakrothmobile/details/category_detail.dart';
+import 'package:vireakrothmobile/home/categoryscreen.dart';
 import 'package:vireakrothmobile/home/contact.dart';
 import 'package:vireakrothmobile/home/productitem.dart';
 import 'package:vireakrothmobile/home/productnew.dart';
@@ -23,14 +24,7 @@ class _HomecontentState extends State<Homecontent> {
   @override
   void initState() {
     super.initState();
-    listCategory.add(
-        new Category(id: 1, title: "Oppo", image: "assets/images/oppo.png"));
-    listCategory.add(
-        new Category(id: 2, title: "Iphone", image: "assets/images/apple.png"));
-    listCategory.add(new Category(
-        id: 3, title: "Samsunge", image: "assets/images/samsung.png"));
-    listCategory
-        .add(new Category(id: 4, title: "jbl", image: "assets/images/jbl.png"));
+
   }
 
 
@@ -160,72 +154,9 @@ class _HomecontentState extends State<Homecontent> {
               const SizedBox(height: 10),
 
               // 📂 Category Section
-              Row(
-                children: [
-                  Image.asset('assets/icons/cate.png', height: 25, width: 25),
-                  const SizedBox(width: 10),
-                  Text("Category", style: AppWidget.HeadlineTextFeildStyle())
-                ],
-              ),
-              const SizedBox(height: 10),
+             CategoryScreen(),
 
-              // 🏷️ Categories List
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: listCategory.length,
-                  itemBuilder: (context, index) {
-                    var data = listCategory[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) {
-                              return CategoryDetailScreen(
-                                title: data.title,
-                                category: data,
-                              );
-                            },
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              const begin = Offset(1.0, 0.0); // Starting position (slide in from the right)
-                              const end = Offset.zero; // Final position
-                              const curve = Curves.easeInOut; // Animation curve
-
-                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                              var offsetAnimation = animation.drive(tween);
-
-                              return SlideTransition(position: offsetAnimation, child: child); // Apply the slide transition
-                            },
-                          ),
-                        ),
-
-                        child: Container(
-                          width: 135,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.grey.shade200,
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: data.image != null
-                                ? Image.asset(data.image!, fit: BoxFit.cover)
-                                : Center(
-                              child: Text("No Image",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade700)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 15),
+            const SizedBox(height: 15),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

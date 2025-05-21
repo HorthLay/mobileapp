@@ -76,16 +76,18 @@ class AuthController extends GetxController {
     return token.value.isNotEmpty;
   }
 
-  void logout() async {
+  Future<void> logout() async {
     try {
       if (token.value.isNotEmpty) {
-        await ApiService.logout(token.value); // Call the logout API
-        token.value = ""; // Clear the token
-        username.value = ""; // Clear the username
+        await ApiService.logout(token.value); // Optional API call
+        token.value = '';
+        username.value = '';
+
         final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('auth_token'); // Remove token from SharedPreferences
-        await prefs.remove('username'); // Remove username from SharedPreferences
-        Get.offAllNamed("/login"); // Navigate to login screen after logging out
+        await prefs.remove('auth_token');
+        await prefs.remove('username');
+
+        Get.offAllNamed('/login');
         Get.snackbar("Success", "Logged out successfully",
             backgroundColor: Colors.green, colorText: Colors.white);
       }

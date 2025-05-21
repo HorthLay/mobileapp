@@ -47,6 +47,8 @@ class _ProductNewState extends State<ProductNew> {
                   pageBuilder: (_, __, ___) => ProductDetail(product: {
                     'title': product.name,
                     'image': product.image,
+                    'description': product.description,
+                    'category_id': product.categoryId,
                     'price': product.price.toStringAsFixed(2),
                     'status': product.status,
                     'discount': "${product.discount.toStringAsFixed(2)}%",

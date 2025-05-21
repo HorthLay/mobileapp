@@ -42,14 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void initState() {
     super.initState();
-    listCategory.add(
-        new Category(id: 1, title: "Oppo", image: "assets/images/oppo.png"));
-    listCategory.add(
-        new Category(id: 2, title: "Iphone", image: "assets/images/apple.png"));
-    listCategory.add(new Category(
-        id: 3, title: "Samsunge", image: "assets/images/samsung.png"));
-    listCategory
-        .add(new Category(id: 4, title: "jbl", image: "assets/images/jbl.png"));
+
   }
   int _notificationCount = 2;
   int _currentIndex = 0;
