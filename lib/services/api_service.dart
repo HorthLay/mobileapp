@@ -21,6 +21,57 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> register({
+    required String name,
+    required String email,
+    required String phone,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/register'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "password_confirmation": passwordConfirmation,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      // Try to parse error response
+      try {
+        final body = jsonDecode(response.body);
+
+        // API error format might differ, adapt this accordingly
+        if (body is Map<String, dynamic>) {
+          if (body.containsKey('errors')) {
+            // Laravel style validation errors
+            final errors = body['errors'];
+            final errorMessages = errors.values
+                .expand((list) => (list as List).map((e) => e.toString()))
+                .join('\n');
+            return {"error": true, "message": errorMessages};
+          }
+          return {"error": true, "message": body["message"] ?? "Registration failed"};
+        } else {
+          return {"error": true, "message": "Registration failed"};
+        }
+      } catch (e) {
+        throw Exception("Registration failed with status ${response.statusCode}");
+      }
+    }
+  }
+
+
+
+
+
+
   static Future<void> logout(String token) async {
     try {
       final response = await http.post(

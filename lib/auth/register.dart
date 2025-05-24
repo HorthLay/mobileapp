@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -8,6 +11,72 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final AuthController authController = Get.put(AuthController());
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _onRegisterPressed() async {
+    String name = nameController.text.trim();
+    String email = emailController.text.trim();
+    String phone = phoneController.text.trim();
+    String password = passwordController.text;
+    String confirmPassword = confirmPasswordController.text;
+
+    if (name.isEmpty || email.isEmpty || phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Please fill in all fields",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      Get.snackbar(
+        "Error",
+        "Passwords do not match",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      await authController.register(
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+        passwordConfirmation: confirmPassword,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to register: ${e.toString()}",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,22 +86,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             // Small Back Button
             Positioned(
-              top: 15, // Adjust position
+              top: 15,
               left: 10,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white, // White background
-                  shape: BoxShape.circle, // Circular shape
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black26, // Soft shadow
+                      color: Colors.black26,
                       blurRadius: 4,
                       offset: Offset(2, 2),
                     ),
                   ],
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black), // Black arrow
+                  icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -43,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 50), // Pushes text below back button
+                  SizedBox(height: 50),
                   Text(
                     "Sign Up",
                     style: TextStyle(
@@ -55,162 +124,164 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Please sign in to your existing account",
+                    "Please create a new account",
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.white70,
                         fontFamily: "Poppins"),
                   ),
-
                   SizedBox(height: 20),
-
-                  Expanded(child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white, // Background color
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40.0),
-                        topRight: Radius.circular(40.0),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40.0),
+                          topRight: Radius.circular(40.0),
+                        ),
                       ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.all(25.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Email Field
-                            Text(
-                              "Name",
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(height: 8),
-                            TextField(
-                              decoration: InputDecoration(
-                                hintText: "Enter your Name",
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide.none),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Name Field
+                              Text(
+                                "Name",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
                               ),
-                            ),
-
-                            SizedBox(height: 20),
-                            // Email
-                            Text(
-                              "Email",
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(height: 8),
-                            TextField(
-                              decoration: InputDecoration(
-                                hintText: "Enter your Email",
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide.none),
-                              ),
-                            ),
-
-                            SizedBox(height: 20),
-
-                            //Phone
-
-                            Text(
-                              "Phone",
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(height: 8),
-                            TextField(
-                              keyboardType: TextInputType.phone, // Only numeric keyboard
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly, // Restricts input to digits only
-                              ],
-                              decoration: InputDecoration(
-                                hintText: "Enter your Phone",
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  borderSide: BorderSide.none,
+                              SizedBox(height: 8),
+                              TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                  hintText: "Enter your Name",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: BorderSide.none),
                                 ),
                               ),
-                            ),
-
-
-                            SizedBox(height: 20),
-                            // Password Field
-                            Text(
-                              "Password",
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(height: 8),
-                            TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: "Enter your password",
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide.none),
+                              SizedBox(height: 20),
+                              // Email Field
+                              Text(
+                                "Email",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
                               ),
-                            ),
-
-                            SizedBox(height: 20),
-                            Text(
-                              "Confirm Password",
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(height: 8),
-                            TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: "Confirm your password",
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide.none),
-                              ),
-                            ),
-                            // Forgot Password
-
-
-                            SizedBox(height: 20),
-
-                            // Login Button
-                            SizedBox(
-                              width: double.infinity,
-                              height: 60,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0)),
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                ),
-                                child: Text(
-                                  "Log In",
-                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                              SizedBox(height: 8),
+                              TextField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  hintText: "Enter your Email",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: BorderSide.none),
                                 ),
                               ),
-                            ),
-
-                            SizedBox(height: 20),
-
-                            // Signup Redirect
-
-
-
-
-                          ],
+                              SizedBox(height: 20),
+                              // Phone Field
+                              Text(
+                                "Phone",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(height: 8),
+                              TextField(
+                                controller: phoneController,
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: "Enter your Phone",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              // Password Field
+                              Text(
+                                "Password",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(height: 8),
+                              TextField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: "Enter your password",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              // Confirm Password Field
+                              Text(
+                                "Confirm Password",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(height: 8),
+                              TextField(
+                                controller: confirmPasswordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: "Confirm your password",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              // Register Button
+                              Obx(() {
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    onPressed: authController.isLoading.value
+                                        ? null
+                                        : _onRegisterPressed,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blueAccent,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12.0)),
+                                      padding: EdgeInsets.symmetric(vertical: 12),
+                                    ),
+                                    child: authController.isLoading.value
+                                        ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                        : Text(
+                                      "Register",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
+                                  ),
+                                );
+                              }),
+                              SizedBox(height: 20),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   ),
                 ],
               ),
@@ -219,6 +290,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
-
   }
 }
